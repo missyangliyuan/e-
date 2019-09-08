@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>地址管理</title>
+	<link rel="stylesheet" href="http://at.alicdn.com/t/font_1392720_du8mv4pzkxw.css">
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+		.btn {
+			display: inline-block;;
+			padding: .5em 2em;
+			border-radius: 3px;
+			background-color: #9db513;
+			color:#fff;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+		.sousuolan {
+			display: inline-block;
+			margin-left: 20px;
+			margin-bottom: 20px;
+		}
+		.f5 {
+			display: inline-block;
+			margin-left: 100px;
+		}
+		.f5 > a:hover {
+			color: #9db513;
+			font-size: 16px;
+		}
+		.sousuolan {
+			display: inline-block;
+		}
+		.sousuolan > .sousuokuang {
+			width:170px;
+			height: 100%;
+			background-color: #fff;
+			border: 1px solid #ededed;
+
+		}
+		.sousuolan > .sousuokuang > i {
+			float: right;
+			font-size: 16px;
+			padding-top: 7px;
+		}
+		.sousuolan input {
+			padding-left: 5px;
+			border: none;
+			line-height: 30px;
+		}
+		.table {
+			width: 80%;
+			border-collapse: collapse;
+			margin: 20px auto;
+			box-sizing: border-box;
+		}
+		.table tr {
+			height: 40px;
+		}
+		.table tr > td,
+		.table tr > th {
+			border:2px solid #6c733b;
+			text-align: center;
+			line-height: 2em;
+		}
+		.bjcolor{
+			background-color: #ecf6aa;
+			color: #6c733b;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="anniu">
+		<div class="sousuolan">
+			<div class="sousuokuang">
+				<input type="text" placeholder="请输入id..." id="input">
+				<i class="iconfont icon-e1"></i>
+			</div>
+		</div>
+		<div class="btn" id="sc">删除</div>
+		<div class="btn" id="cz">查找</div>
+		<div class="btn" id="xg">修改</div>
+		<div class="btn" id="tj">添加</div>		
+		<div class="btn" id="plsc">批量删除</div>
+		<div class="f5" id="f5"><a href="javascript:void(0)"><i class="iconfont icon-refresh1">刷新</i></a></div>
+	</div>
+	<form action="javascript:void(0)">
+		<table>
+			<tbody>
+				<tr>
+					<td>id</td>
+					<td><input type="text" name="id"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>省份</td>
+					<td><input type="text" name="province"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>城市</td>
+					<td><input type="text" name="city"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>区/县</td>
+					<td><input type="text" name="area"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>地址</td>
+					<td><input type="text" name="address"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>电话</td>
+					<td><input type="text" name="telephone"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>订单号</td>
+					<td><input type="text" name="customerId"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input type="submit" value="保存" id="bc"></td>					
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<table class="table" id="dizhi">
+		<thead>
+			<tr>
+				<th><input type="checkbox"></th>
+				<th>id</th>
+				<th>省份</th>
+				<th>城市</th>
+				<th>区/县</th>
+				<th>地址</th>
+				<th>电话</th>
+				<th>订单号</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody class="shuju">
+			
+		</tbody>
+	</table>
+
+	<script>
+	console.log($("#input"));
+	var baseURL = "http://134.175.154.93:6677";
+		// 刷新当前页面
+		$(function(){
+			$("#f5").on("click",function(){
+				initData();
+				document.querySelector("input[id=input]").value = "";
+				$("form>table>tbody>tr>td>input")[0].value = "";
+				$("form>table>tbody>tr>td>input")[1].value = "";
+				$("form>table>tbody>tr>td>input")[2].value = "";
+				$("form>table>tbody>tr>td>input")[3].value = "";
+				$("form>table>tbody>tr>td>input")[4].value = "";
+				$("form>table>tbody>tr>td>input")[5].value = "";
+				$("form>table>tbody>tr>td>input")[6].value = "";
+			})
+		})
+
+		// 初始化数据
+		initData();	
+		function initData(){
+			var baseURL = "http://134.175.154.93:6677";
+			var url = "/address/findAddressAll";
+				// 初始化数据
+			$.get(baseURL+url,function(response){
+				// console.log(response.data);
+				$(".shuju").empty();
+				response.data.forEach(function(item){
+					var newTr = $(`<tr>
+					<td><input type="checkbox" value="`+item.id+`"></td>
+					<td>`+item.id+`</td>
+					<td>`+item.province+`</td>
+					<td>`+item.city+`</td>
+					<td>`+item.area+`</td>
+					<td>`+item.address+`</td>
+					<td>`+item.telephone+`</td>
+					<td>`+item.customerId+`</td>
+					<td>
+						<a class="btn_del" href="javascript:void(0)">删除</a>
+						<a class="btn_upd" href="javascript:void(0)">修改</a>
+					</td>
+				</tr>`);
+					$(".shuju").append(newTr);
+				})
+			})
+		}
+
+		// 删除数据
+		$(function(){
+			initData();
+			$("#dizhi>tbody").on("click","a",function(){
+				var id = $(this).parents("tr").find("input").val();
+				alert(id)				
+				var baseURL = "http://134.175.154.93:6677";
+				var url = "/address/deleteAddressById"
+				var data = "id="+id;
+				if(this.className === "btn_del"){
+					$.post(baseURL+url,data,function(response){
+						alert(response.message)
+						initData();
+					})
+				}
+			})
+		})
+
+		// 通过id删除数据
+		$(function(){
+			
+			$("#sc").on("click",function(){
+				var id = document.querySelector("input[id=input]").value || document.querySelector("input[name=id]").value;
+				//alert(id)
+				var baseURL = "http://134.175.154.93:6677";
+				var url = "/address/deleteAddressById";
+				var data  = "id="+id;
+				$.post(baseURL+url,data,function(response){
+					alert(response.message);
+					initData();
+				})
+			})
+		})
+
+		// 通过id查找数据
+		function chazhao(){
+			$(function(){
+				$("#cz").on("click",function(){
+					var id = document.querySelector("input[id=input]").value || document.querySelector("input[name=id]").value;
+
+					var baseURL = "http://134.175.154.93:6677";
+					var url = "/address/findByCategoryId"
+					var data = "id="+id;
+					$.get(baseURL+url,data,function(response){
+						console.log(response);
+						var a = response.data;
+						if(a){
+							initData();
+							$("form>table>tbody>tr>td>input")[0].value = a.id;
+							$("form>table>tbody>tr>td>input")[1].value = a.province;
+							$("form>table>tbody>tr>td>input")[2].value = a.city;
+							$("form>table>tbody>tr>td>input")[3].value = a.area;
+							$("form>table>tbody>tr>td>input")[4].value = a.address;
+							$("form>table>tbody>tr>td>input")[5].value = a.telephone;
+							$("form>table>tbody>tr>td>input")[6].value = a.customerId;
+							
+						} else {
+							alert("此id不存在");
+						}
+					})
+
+
+				})
+			})
+		}
+		chazhao();
+
+		// 通过id修改数据
+		$(function(){
+			$("#xg").on("click",function(){				
+				var baseURL = "http://134.175.154.93:6677";
+				var url = "/address/updateAddressPrimaryKey"
+				var data = {
+					id: document.querySelector("input[name=id]").value || document.querySelector("input[id=input]").value,
+					province: $("form>table>tbody>tr>td>input")[1].value,
+					city: $("form>table>tbody>tr>td>input")[2].value,
+					area: $("form>table>tbody>tr>td>input")[3].value,
+					address: $("form>table>tbody>tr>td>input")[4].value,
+					telephone: $("form>table>tbody>tr>td>input")[5].value,
+					customerId: $("form>table>tbody>tr>td>input")[6].value
+				}
+				$.post(baseURL+url,data,function(response){
+					console.log(response);
+					initData();
+
+					alert(response.message);
+					
+				})
+			})
+			
+		})
+
+		// 为添加按钮添加事件
+		function tianjia(){
+			$(function(){
+				$("#tj").on("click",function(){
+					document.querySelector("input[id=input]").value = "";
+					$("form>table>tbody>tr>td>input")[0].value = "";
+					$("form>table>tbody>tr>td>input")[1].value = "";
+					$("form>table>tbody>tr>td>input")[2].value = "";
+					$("form>table>tbody>tr>td>input")[3].value = "";
+					$("form>table>tbody>tr>td>input")[4].value = "";
+					$("form>table>tbody>tr>td>input")[5].value = "";
+					$("form>table>tbody>tr>td>input")[6].value = "";
+				})
+			})
+		}
+		tianjia();
+
+		// 为保存按钮添加事件
+		$(function(){
+			$("#bc").on("click",function(){
+				var baseURL = "http://134.175.154.93:6677";
+				var url = "/address/insertAddress";
+				var data = {
+					province: $("form>table>tbody>tr>td>input")[1].value,
+					city: $("form>table>tbody>tr>td>input")[2].value,
+					area: $("form>table>tbody>tr>td>input")[3].value,
+					address: $("form>table>tbody>tr>td>input")[4].value,
+					telephone: $("form>table>tbody>tr>td>input")[5].value,
+					customerId: $("form>table>tbody>tr>td>input")[6].value
+				}
+				$.post(baseURL+url,data,function(response){
+					alert(response.message);
+					initData();
+				})
+			})
+		})
+		
+
+		// 加背景颜色
+		$("tbody.shuju").on("mouseover","tr",function(){
+			$("tbody.shuju>tr").removeClass("bjcolor");
+			$(this).addClass("bjcolor");
+		})
+		$("tbody.shuju").on("mouseout","tr",function(){
+			$("tbody.shuju>tr").removeClass("bjcolor");
+			
+		})
+	</script>
+</body>
+</html>

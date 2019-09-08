@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>评论管理</title>
+	<link rel="stylesheet" href="http://at.alicdn.com/t/font_1329408_b784ue0y7b5.css">
+	<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+		.btn {
+			display: inline-block;;
+			padding: .5em 2em;
+			border-radius: 3px;
+			background-color: #9db513;
+			color:#fff;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+		.sousuolan {
+			display: inline-block;
+			margin-left: 20%;
+		}
+		.sousuolan > .sousuokuang {
+			width:170px;
+			height: 100%;
+			background-color: #fff;
+			border: 1px solid #ededed;
+
+		}
+		.sousuolan > .sousuokuang > i {
+			line-height: 30px;
+			float: right;
+			margin-right: 5px;
+			line-height: 30px;
+		}
+		.sousuolan input {
+			padding-left: 5px;
+			border: none;
+			line-height: 30px;
+		}
+		.table {
+			width: 80%;
+			border-collapse: collapse;
+			margin: 20px auto;
+			box-sizing: border-box;
+		}
+		.table tr {
+			height: 40px;
+		}
+		.table tr > td,
+		.table tr > th {
+			border:2px solid #9db513;
+			text-align: center;
+			line-height: 2em;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="anniu">
+		<div class="btn">添加</div>
+		<div class="btn">导出</div>
+		<div class="btn">批量导出</div>
+		<div class="btn">批量删除</div>
+		<div class="sousuolan">
+			<div class="sousuokuang">
+				<input type="text" placeholder="请输入...">
+				<i class="iconfont icon-sousuo2"></i>
+			</div>
+		</div>
+	</div>
+	<form action="javascript:void(0)">
+		<table>
+			<tbody>
+				<tr>
+					<td>id</td>
+					<td><input type="text" name="id"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>content</td>
+					<td><input type="text" name="content"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>commentTime</td>
+					<td><input type="text" name="commentTime"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>orderId</td>
+					<td><input type="text" name="orderId"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="保存"></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<table class="table" id="pl">
+		<thead>
+			<tr>
+				<th><input type="checkbox"></th>
+				<th>订单号</th>
+				<th>内容</th>
+				<th>评论时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+
+	<script>
+		var baseURL = "http://134.175.154.93:6677";
+			var url = "/comment/query";
+			$.get(baseURL+url,function(response){
+				response.data.forEach(function(item){
+					var newTr = $(`<tr>
+					<td><input type="checkbox" value="`+item.id+`"></td>
+					<td>`+item.orderId+`</td>
+					<td>`+item.content+`</td>
+					<td>`+item.commentTime+`</td>
+					<td>
+						<a class="btn_del" href="javascript:void(0)">删除</a>
+						<a class="btn_upd" href="javascript:void(0)">修改</a>
+					</td>
+				</tr>`);
+					$("#pl>tbody").append(newTr);
+				})
+			})
+		// 初始化数据
+
+		$(function(){
+
+			$("#pl>tbody").on("click","a",function(){
+				var id = $(this).parents("tr").find("input").val();
+				console.log(id);
+				// if(this.className === "btn_del"){
+				// 	$.post(url,data,function(response){
+				// 		alert(response.message)
+
+				// 	})
+				// }
+			})
+		})
+		
+		
+		// 加背景颜色
+		tbody.onmouseover = function(event){
+			var target = event.target;
+			if(target.nodeName == "TD") {
+				target.parentNode.className = 'bjcolor';
+			}
+		}
+		tbody.onmouseout = function(event){
+			var target = event.target;
+			if(target.nodeName == "TD") {
+				target.parentNode.className = '';
+			}
+		}
+
+	</script>
+</body>
+</html>
